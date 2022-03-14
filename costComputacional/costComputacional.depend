@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1646757494 source:c:\urv\fp2\practicas\costcomputacional\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<time.h>
+
