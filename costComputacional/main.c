@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <time.h>
+#include <sys/time.h>
+#include <windows.h>
 #define P 50000
-#define N_VEGADES 100
+#define N_VEGADES 5
+
 
 bool esTriangularforcaBruta(unsigned int x){
     unsigned int nTriangular = 1;
@@ -58,13 +60,16 @@ void iniTaula(unsigned int taula[], int max){
 
 int main()
 {
-    clock_t start, end;
+    struct timeval start, end;
+    gettimeofday(&start, NULL);
     int max = calculaMax();
     unsigned int taula[max];
     iniTaula(taula, max);
+    gettimeofday(&end, NULL);
+    printf("La taula s'ha emplenat en %.3fs.\n", end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1000000.0);
 
     unsigned int n;
-    double timeFB = 0, timeOp = 0, timeTa = 0;
+    float timeFB = 0, timeOp = 0, timeTa = end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1000000.0;
     do{
         printf("Esciru un nombre > 0: ");
         scanf(" %u", &n);
@@ -72,34 +77,45 @@ int main()
     unsigned int valn = n;
     printf("\n");
     for(int vegades = 0; vegades < N_VEGADES; vegades++){
-        start = clock();
+
+        gettimeofday(&start, NULL);
         while(!esTriangularforcaBruta(n))
             n++;
-        end = clock();
-        printf("\tForsa bruta:\n\t\tTemps emprat = %lf\n\t\tNumero triangular = %d\n", ((double)(end - start)) / CLOCKS_PER_SEC, n);
-        timeFB += (double)(end - start) / CLOCKS_PER_SEC;
+        gettimeofday(&end, NULL);
+
+        printf("\tEstrategia forsa bruta:\n\t\tTemps emprat = %f\n\t\tNumero triangular = %d\n", end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1000000.0, n);
+        timeFB += end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1000000.0;
         n = valn;
 
-        start = clock();
+        gettimeofday(&start, NULL);
         while(!esTriangularOptima(n))
             n++;
-        end = clock();
-        printf("\tEstrategia optima:\n\t\tTemps emprat = %lf\n\t\tNumero triangular = %d\n", ((double)(end - start)) / CLOCKS_PER_SEC, n);
-        timeOp += (double)(end - start) / CLOCKS_PER_SEC;
+        gettimeofday(&end, NULL);
+
+        printf("\tEstrategia optima:\n\t\tTemps emprat = %f\n\t\tNumero triangular = %d\n", end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1000000.0, n);
+        timeOp += end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1000000.0;
         n = valn;
 
-        start = clock();
-        while(!esTriangularTaula(n, taula, max) && n < P)
-            n++;
-        end = clock();
-        printf("\tEstrategia taula:\n\t\tTemps emprat = %lf\n\t\tNumero triangular = %d\n", ((double)(end - start)) / CLOCKS_PER_SEC, n);
-        timeTa += (double)(end - start) / CLOCKS_PER_SEC;
-        n = valn;
+        if(n > taula[max - 1]){
+            printf("\tL'estrategia de la taula no pot calcular un numero triangular més gran que %d.\n", taula[max - 1]);
+        }else{
+            gettimeofday(&start, NULL);
+            while(!esTriangularTaula(n, taula, max))
+                n++;
+            printf("\tEstrategia taula:\n\t\tTemps emprat = %f\n\t\tNumero triangular = %d\n", end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1000000.0, n);
+            gettimeofday(&end, NULL);
+            gettimeofday(&end, NULL);
+            gettimeofday(&end, NULL);
+
+            timeTa += end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1000000.0;
+            n = valn;
+        }
+
     }
     timeFB /= N_VEGADES;
     timeOp /= N_VEGADES;
     timeTa /= N_VEGADES;
-    printf("\nProva acabada...\n\tTemps mitja forsa bruta: %.3lf\n\tTemps mitja estrategia optima: %.3lf\n\tTemps mitja taula: %.3lf", timeFB, timeOp, timeTa);
+    printf("\nProva acabada...\n\tTemps mitja forsa bruta: %f\n\tTemps mitja estrategia optima: %f\n\tTemps mitja taula: %f", timeFB, timeOp, timeTa);
     printf("\n");
     return 0;
 }
