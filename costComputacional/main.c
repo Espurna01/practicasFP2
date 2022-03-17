@@ -16,11 +16,17 @@ bool esTriangularforcaBruta(unsigned int x){
 }
 
 bool esTriangularOptima(unsigned int x){
-    unsigned int arrel = 8*x + 1;
-    printf("arrel = %u\n", arrel);
-    unsigned int n =(unsigned int) sqrt(arrel);
-    printf("n = %u\n", n);
+//    if(x > 536870911)
+//        return esTriangularforcaBruta(x);
+    unsigned long long arrel = x;
+    arrel = arrel*8 + 1;
+    unsigned long long n =(unsigned long long) sqrt(arrel);
     return n*n == arrel;
+}
+
+bool esTriangularOptima2(unsigned int x){
+
+    return true;
 }
 
 bool esTriangularTaula(unsigned int x, unsigned int taula[], int max){
@@ -32,15 +38,11 @@ bool esTriangularTaula(unsigned int x, unsigned int taula[], int max){
     return false;
 }
 
-
 void iniTaula(unsigned int taula[], int max){
-    unsigned int i = 1;
-    int index = 0;
-    while(index < max){
-        if(esTriangularOptima(i)){
-            taula[index] = i;
-            index++;
-        }
+    unsigned int i = 2;
+    taula[0] = 1;
+    while(i <= max){
+        taula[i - 1] = taula[i - 2] + i;
         i++;
     }
 }
@@ -50,26 +52,22 @@ int main()
     struct timeval start, end;
     srand(time(NULL));
     printf("Se esta emplenant la taula amb %d elements...\n", P);
-    printf("685350440 es prime: %d", esTriangularOptima(685350440));
-    return 0;
+
     gettimeofday(&start, NULL);
     unsigned int taula[P];
-    //iniTaula(taula, P);
+    iniTaula(taula, P);
     gettimeofday(&end, NULL);
 
     float timeFB = 0, timeOp = 0, timeTa = end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1000000.0;
     float oldTimeTa = timeTa;
-    printf("La taula s'ha emplenat en %.3fs. Y el valor maxim de la taula es %u\n", timeTa, taula[P - 1]);
+    printf("La taula s'ha emplenat en %.3fs. Y el valor maxim de la taula es %u, %d\n", timeTa, taula[P - 1], P);
 
-
-
-    unsigned int n;
+    unsigned int n, valn = rand() + 1;
 
     printf("Calculant el temps d'execucio 5 vegades:\n\n");
     for(int vegades = 0; vegades < 5; vegades++){
-        n = rand() + 1;
+        n = valn;
         printf("Calulant numero triangular >= %u:\n\n", n);
-        unsigned int valn = n;
         gettimeofday(&start, NULL);
         while(!esTriangularforcaBruta(n))
             n++;
@@ -97,6 +95,7 @@ int main()
         timeTa += end.tv_sec - start.tv_sec + (end.tv_usec - start.tv_usec)/1000000.0;
         n = valn;
 
+        valn = valn * 2;
         printf("\n");
     }
     timeFB /= 5;
