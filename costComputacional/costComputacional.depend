@@ -1,10 +1,10 @@
 # depslib dependency file v1.0
-1647284998 source:c:\urv\fp2\practicas\costcomputacional\main.c
+1647528506 source:c:\urv\fp2\practicas\costcomputacional\main.c
 	<stdio.h>
 	<stdlib.h>
-	<stdbool.h>
 	<sys/time.h>
-	<windows.h>
+	<math.h>
+	"triangular.h"
 
 1647518164 source:c:\urv\fpii\practicasfp2\costcomputacional\main.c
 	<stdio.h>
@@ -13,4 +13,10 @@
 	<sys/time.h>
 	<windows.h>
 	<math.h>
+
+1647528531 c:\urv\fp2\practicas\costcomputacional\triangular.h
+	<stdbool.h>
+
+1647528421 source:c:\urv\fp2\practicas\costcomputacional\triangular.c
+	<stdbool.h>
 
