@@ -1,6 +1,8 @@
 # depslib dependency file v1.0
-1648539702 source:c:\urv\fpii\practicasfp2\picross\main.c
+1648557297 source:c:\urv\fpii\practicasfp2\picross\main.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
+	<time.h>
+	<sys/time.h>
 
