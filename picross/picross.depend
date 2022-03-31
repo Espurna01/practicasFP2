@@ -6,3 +6,10 @@
 	<time.h>
 	<sys/time.h>
 
+1648682211 source:c:\urv\fp2\practicas\picross\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+	<time.h>
+	<sys/time.h>
+

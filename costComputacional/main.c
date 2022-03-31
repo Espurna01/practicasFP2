@@ -4,7 +4,7 @@
 #include <math.h>
 #include "triangular.h"
 #define P 50000
-#define N_VEGADES 1000
+#define N_VEGADES 10000
 
 int main()
 {
@@ -23,8 +23,8 @@ int main()
 
     unsigned int n;
 
-    printf("Calculant el temps d'execucio 5 vegades:\n\n");
-    for(int vegades = 0; vegades < 5; vegades++){
+    printf("Calculant el temps d'execucio 10 vegades:\n\n");
+    for(int vegades = 0; vegades < 10; vegades++){
         n = rand() * (rand() % 50 + 1) + 1;
         unsigned int valn = n;
         printf("Calulant numero triangular >= %u:\n\n", n);
