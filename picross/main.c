@@ -4,7 +4,8 @@
 #include <time.h>
 #include <sys/time.h>
 #define MAX 10
-#define MAXROWCOL 19
+#define MAXROWCOL 100
+#define CENTINELLA -1
 
 typedef struct{
     char valor;
@@ -35,111 +36,55 @@ bool carregarDades(char* filename, int *m, int *n, int *e, casella_t joc[][MAXRO
     return true;
 }
 
-void calcularCantonades(int m, int n, casella_t joc[][MAXROWCOL], int cantonades[]){
-    int cantonadaActual = 0;
+void calcularCantonades(int m, int n, casella_t joc[][MAXROWCOL], int maxCombinations, char cantonades[][maxCombinations]){
+    char cantonadaActual = 0;
+    int index = 0;
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
             if(joc[i][j].valor == '1')
                 cantonadaActual++;
-            else if (cantonadaActual % 10 != 0)
-                cantonadaActual *= 10;
+            else {
+                if(cantonadaActual != 0){
+                    cantonades[i][index] = cantonadaActual;
+                    index++;
+                }
+                cantonades[i][index] = CENTINELLA;
+                cantonadaActual = 0;
+            }
         }
-        if(cantonadaActual % 10 == 0)
-            cantonadaActual /= 10;
-        cantonades[i] = cantonadaActual;
-        cantonadaActual = 0;
+        if(cantonadaActual != 0){
+            cantonades[i][index] = cantonadaActual;
+            index++;
+            cantonades[i][index] = CENTINELLA;
+            cantonadaActual = 0;
+        }
+        index = 0;
     }
-
+    cantonadaActual = 0;
     for(int j = 0; j < n; j++){
         for(int i = 0; i < m; i++){
             if(joc[i][j].valor == '1')
                 cantonadaActual++;
-            else if (cantonadaActual % 10 != 0)
-                cantonadaActual *= 10;
+            else {
+                if(cantonadaActual != 0){
+                    cantonades[j + m][index] = cantonadaActual;
+                    index++;
+                }
+                cantonades[j + m][index] = CENTINELLA;
+                cantonadaActual = 0;
+            }
         }
-        if(cantonadaActual % 10 == 0)
-            cantonadaActual /= 10;
-        cantonades[j + m] = cantonadaActual;
-        cantonadaActual = 0;
+        if(cantonadaActual != 0){
+            cantonades[j + m][index] = cantonadaActual;
+            index++;
+            cantonades[j + m][index] = CENTINELLA;
+            cantonadaActual = 0;
+        }
+        index = 0;
     }
 }
 
-void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int cantonades[]){
-    int digitsMaxCantonadesM = 0;
-    int digitsMaxCantonadesN = 0;
-    for(int i = 0; i < m + n; i++){
-        int digits = 0;
-        int cantonada = cantonades[i];
-        while(cantonada != 0){
-            digits++;
-            cantonada /= 10;
-        }
-        if(i < m){
-            if(digits > digitsMaxCantonadesM)
-                digitsMaxCantonadesM = digits;
-        }else if(digits > digitsMaxCantonadesN)
-            digitsMaxCantonadesN = digits;
-    }
-    printf("\t\t%c", 201);
-    for(int i = 0; i < n*2 + digitsMaxCantonadesM;i++)
-        printf("%c", 205);
-    printf("%c\n", 187);
-    for(int i = 0; i < digitsMaxCantonadesN; i++){
-        printf("\t\t%c", 186);
-        for(int j = 0; j < digitsMaxCantonadesM; j++){
-            printf(" ");
-        }
-        for(int j = 0; j < n; j++){
-            printf("|");
-            int valor = cantonades[m + j];
-            int reverse = 0;
-            while (valor > 0){
-                reverse = reverse * 10 + valor % 10;
-                valor /= 10;
-            }
-            for(int k = 0; k < i; k++){
-                reverse = reverse/10;
-            }
-            if(reverse % 10 != 0)
-                printf("%d", reverse % 10);
-            else printf(" ");
-        }
-        printf("%c\n", 186);
-    }
-
-    for(int i = 0; i < m; i++){
-        printf("\t\t%c", 186);
-        for(int j = 0; j < (digitsMaxCantonadesM + n * 2); j++){
-            printf("%c", 196);
-        }
-        printf("%c\n", 186);
-        int valor = cantonades[i];
-        int digits = 0;
-        while(valor != 0){
-            valor /= 10;
-            digits++;
-        }
-        printf("\t\t%c", 186);
-        if(cantonades[i] != 0)
-            printf("%d", cantonades[i]);
-        for(int j = 0; digits + j < digitsMaxCantonadesM;j++){
-            printf(" ");
-        }
-        for(int j = 0; j < n; j++){
-            printf("|");
-            if(!joc[i][j].revelat)
-                printf("%c", joc[i][j].valor == '1'?254:'X');
-            else printf("%c", joc[i][j].flag?'F':'?');
-        }
-        printf("%c\n", 186);
-    }
-    printf("\t\t%c", 200);
-    for(int i = 0; i < n*2 + digitsMaxCantonadesM;i++)
-        printf("%c", 205);
-    printf("%c\n", 188);
-}
-
-bool generarFitxerAleatori(char *filename, int m, int n, int e){
+bool generarFitxerAleatori(char *filename, int m, int n, int e, int density){
     FILE *fit = fopen(filename, "w");
 
     if(fit == NULL){
@@ -155,8 +100,8 @@ bool generarFitxerAleatori(char *filename, int m, int n, int e){
     fprintf(fit, "%d %d %d\n", m, n, e);
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
-            int rand10 = rand() % 10 + 1;
-            char a = rand() % rand10 > rand10/2;
+            int rand10 = rand() % 100 + 1;
+            char a = rand() % rand10 <= density;
             fprintf(fit, "%d", a);
         }
         fprintf(fit, "\n");
@@ -173,56 +118,7 @@ bool jocAcabat(int m, int n, casella_t joc[][MAXROWCOL]){
                 return false;
         }
     }
-
     return true;
-}
-
-int cantonadaOptima(int start, int end, int cantonades[]){
-    int optim = 0;
-    int prevSum = 0;
-    int current;
-    for(int i = start; i < end; i++){
-        int sum = 0;
-        current = cantonades[i];
-        while(current != 0){
-            sum += current % 10;
-            current /= 10;
-        }
-        if(sum > prevSum){
-            optim = i;
-            prevSum = sum;
-        }
-    }
-    return optim;
-}
-
-void IA(int m, int n, int e, casella_t joc[][MAXROWCOL], int cantonades[]){
-    int errorsMaquina = 0;
-    int cantonadesMaquina[m + n];
-
-    for(int i = 0; i < m + n; i++){
-        cantonadesMaquina[i] = cantonades[i];
-    }
-
-    while(!jocAcabat(m, n, joc) && errorsMaquina <= e){
-        int optimaM = cantonadaOptima(0, m, cantonadesMaquina);
-        int optimaN = cantonadaOptima(m, m + n, cantonadesMaquina) - m;
-        printf("%d, %d\n", optimaM, optimaN);
-
-        joc[optimaM][optimaN].revelat = true;
-        if(joc[optimaM][optimaN].valor == '0')
-            errorsMaquina++;
-
-
-
-        printTaulerJoc(m, n, joc, cantonades);
-        break;
-    }
-
-    if(errorsMaquina > e){
-        printf("La maquina ha guanyat ");
-    } else printf("La maquina ha perdut en ");
-    printf("%d errors.", errorsMaquina);
 }
 
 bool boardToPBM(char *filename, int m, int n, casella_t joc[][MAXROWCOL]){
@@ -234,11 +130,129 @@ bool boardToPBM(char *filename, int m, int n, casella_t joc[][MAXROWCOL]){
     fprintf(fit, "P1 %d %d\n", n, m);
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
-            fwrite(&(joc[i][j].valor), 1, 1, fit);
+            fputc(joc[i][j].valor, fit);
         }
     }
     fclose(fit);
     return true;
+}
+
+void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombinations, char cantonades[][maxCombinations]){
+    int maxBlocsM = 0;
+    int maxDigitsM = 0;
+    int maxBlocsN = 0;
+    int maxDigitsN = 0;
+    for(int i = 0; i < m + n; i++){
+        int digits = 0;
+        int blocs = 0;
+        for(int j = 0; cantonades[i][j] != CENTINELLA; j++){
+            char cantonada = cantonades[i][j];
+            while(cantonada != 0){
+                digits++;
+                cantonada /= 10;
+            }
+            blocs++;
+            if(i >= m){
+                if(digits > maxDigitsN)
+                    maxDigitsN = digits;
+                digits = 0;
+            }
+        }
+        if(i < m){
+            if(digits > maxDigitsM)
+                maxDigitsM = digits;
+            if(blocs > maxBlocsM)
+                maxBlocsM = blocs;
+        }else {
+            if(blocs > maxBlocsN)
+                maxBlocsN = blocs;
+        }
+    }
+
+    printf("\t\t%c", 201);
+    for(int i = 0; i < maxDigitsM * 2 + (maxDigitsN - 1) * n + n * 2;i++)
+        printf("%c", 205);
+    printf("%c\n", 187);
+
+    for(int i = 0; i < maxBlocsN; i++){
+        printf("\t\t%c", 186);
+        for(int j = 0; j < maxDigitsM * 2; j++){
+            printf(" ");
+        }
+        for(int j = 0; j < n; j++){
+            printf("|");
+            int blocs;
+            for(blocs = 0; cantonades[j + m][blocs] != CENTINELLA; blocs++);
+            if(i >= blocs){
+                for(int k = 0; k < maxDigitsN; k++){
+                    printf(" ");
+                }
+            }else{
+                printf("%d", cantonades[j + m][i]);
+                int digits = 0;
+                char cantonada = cantonades[j + m][i];
+                while(cantonada != 0){
+                    digits++;
+                    cantonada /= 10;
+                }
+                for(int k = 0;digits + k < maxDigitsN;k++){
+                    printf(" ");
+                }
+            }
+        }
+        printf("%c\n", 186);
+    }
+
+    for(int i = 0; i < m; i++){
+        printf("\t\t%c", 186);
+        for(int j = 0;j < maxDigitsM * 2 + (maxDigitsN - 1) * n + n * 2; j++){
+            printf("%c", 196);
+        }
+        printf("%c\n", 186);
+        printf("\t\t%c", 186);
+        int digits = 0;
+        for(int j = 0; cantonades[i][j] != CENTINELLA; j++){
+            char cantonada = cantonades[i][j];
+            while(cantonada != 0){
+                digits++;
+                cantonada /= 10;
+            }
+        }
+
+        for(int k = 0; (digits * 2) + k < maxDigitsM * 2 + 1;k++)
+            printf(" ");
+
+        for(int j = 0; cantonades[i][j] != CENTINELLA; j++){
+            char a = cantonades[i][j] / 10;
+            while(a != 0){
+                printf(" ");
+                a /= 10;
+            }
+        }
+
+        for(int j = 0; cantonades[i][j] != CENTINELLA; j++){
+            if(j == 0)
+                printf("%d", cantonades[i][j]);
+            else printf(" %d", cantonades[i][j]);
+        }
+
+        for(int j = 0; j < n; j++){
+            printf("|");
+            if(!joc[i][j].revelat)
+                printf("%c", joc[i][j].valor == '1'?254:'X');
+            else printf("%c", joc[i][j].flag?'F':'?');
+            for(int k = 1; k < maxDigitsN; k++){
+                printf(" ");
+            }
+        }
+        printf("%c\n", 186);
+    }
+
+    printf("\t\t%c", 200);
+    for(int i = 0; i < maxDigitsM * 2 + (maxDigitsN - 1) * n + n * 2;i++)
+        printf("%c", 205);
+    printf("%c\n", 188);
+    printf("\n");
 }
 
 int main()
@@ -248,17 +262,41 @@ int main()
     casella_t joc[MAXROWCOL][MAXROWCOL];
     carregarDades("fitProva.txt", &m, &n, &maxErrors, joc);
 
-    int cantonades[n + m];
-    calcularCantonades(m, n, joc, cantonades);
+    int maxCombinations = 0;
+    if(m > n){
+        if(m % 2 != 0)
+            maxCombinations++;
+        maxCombinations += m;
+    }else {
+        if(n % 2 != 0)
+            maxCombinations++;
+        maxCombinations += n;
+    }
+    maxCombinations /= 2;
+    maxCombinations++;
+    char cantonades[n + m][maxCombinations];
+    printf("max = %d\n", maxCombinations);
+    calcularCantonades(m, n, joc, maxCombinations, cantonades);
 
     printf("%d %d %d\n", m, n, maxErrors);
 
-    printTaulerJoc(m, n, joc, cantonades);
+    for(int i = 0; i < n + m; i++){
+        if(i < m){
+            printf("Fila (%d):", i + 1);
+        }else printf("Columna (%d):", i - m + 1);
+        int j;
+        for(j = 0; cantonades[i][j] != CENTINELLA; j++){
+            printf("%d ", cantonades[i][j]);
+        }
+        printf("; n=%d\n", j);
+    }
+
+    printTaulerJoc(m, n, joc, maxCombinations, cantonades);
     boardToPBM("fitProva.pbm", m, n, joc);
 
     printf("Joc acabat %d\n", jocAcabat(m, n, joc));
 
     //IA(m, n  , maxErrors, joc, cantonades);
-    //generarFitxerAleatori("fitProva.txt", rand() % MAXROWCOL + 1, rand() % MAXROWCOL + 1, 10);
+    //generarFitxerAleatori("fitProva.txt", rand() % (MAXROWCOL/2) + 1, rand() % (MAXROWCOL/4) + 1, 10, 50);
     return 0;
 }
