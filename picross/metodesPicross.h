@@ -12,6 +12,14 @@ typedef struct{
     bool flag;
 }casella_t;
 
+/** \brief Llegei el fitxer anomenat filename i guarda les dades de la dimensió i dels errors en enters passats per
+ *         paràmetre i
+ *
+ * \param
+ * \param
+ * \return
+ *
+ */
 bool carregarDades(char* filename, int *m, int *n, int *e, casella_t joc[][MAXROWCOL]);
 
 void calcularCantonades(int m, int n, casella_t joc[][MAXROWCOL], int maxCombinations, char cantonades[][maxCombinations]);
