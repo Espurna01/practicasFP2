@@ -183,14 +183,14 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
             printf("|");
             int blocs;
             for(blocs = 0; cantonades[j + m][blocs] != CENTINELLA; blocs++);
-            if(i >= blocs){
+            if(i + blocs < maxBlocsN){
                 for(int k = 0; k < maxDigitsN; k++){
                     printf(" ");
                 }
             }else{
-                printf("%d", cantonades[j + m][i]);
+                printf("%d", cantonades[j + m][i - maxBlocsN + blocs]);
                 int digits = 0;
-                char cantonada = cantonades[j + m][i];
+                char cantonada = cantonades[j + m][i - maxBlocsN + blocs];
                 while(cantonada != 0){
                     digits++;
                     cantonada /= 10;
@@ -238,7 +238,7 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
 
         for(int j = 0; j < n; j++){
             printf("|");
-            if(!joc[i][j].revelat)
+            if(joc[i][j].revelat)
                 printf("%c", joc[i][j].valor == '1'?254:'X');
             else printf("%c", joc[i][j].flag?'F':'?');
             for(int k = 1; k < maxDigitsN; k++){
@@ -253,6 +253,123 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
         printf("%c", 205);
     printf("%c\n", 188);
     printf("\n");
+}
+
+int cantonadaOptima(int start, int end, int maxCombinations,char cantonades[][maxCombinations]){
+    int optim = 0;
+    int prevSum = 0;
+    int current;
+
+    return optim;
+}
+
+bool overlapTech(int m, int n, casella_t joc[][MAXROWCOL], int maxCombinations, char cantonades[][maxCombinations]){
+    bool change = true;
+    for(int i = 0; i < m + n; i++){
+        int blocs;
+        int sum = 0;
+        for(blocs = 0; cantonades[i][blocs] != CENTINELLA; blocs++){
+            sum += cantonades[i][blocs];
+        }
+
+        int fc = i < m?n:m;
+        if(sum + blocs/2 > fc/2){
+            char arr1[fc];
+            char arr2[fc];
+            if(fc == n){
+                for(int j = 0; j < n; j++){
+                    if(joc[i][j].revelat){
+                        arr1[j] = joc[i][j].valor;
+                        arr1[j] = joc[i][j].valor;
+                    }else if(joc[i][j].flag){
+                        arr1[j] = '0';
+                        arr2[j] = '0';
+                    }
+                    else{
+                        arr1[j] = 0;
+                        arr2[j] = 0;
+                    }
+
+                }
+            }else {
+                for(int j = 0; j < m; j++){
+                    if(joc[j][i].revelat){
+                        arr1[j] = joc[i][j].valor;
+                        arr1[j] = joc[i][j].valor;
+                    }else if(joc[j][i].flag){
+                        arr1[j] = '0';
+                        arr2[j] = '0';
+                    }
+                    else{
+                        arr1[j] = 0;
+                        arr2[j] = 0;
+                    }
+                }
+            }
+            int i = 0;
+            int j;
+            for(j = 0; cantonades[i][j] != CENTINELLA; j++){
+                for(;i <= cantonades[i][j]; i++){
+                    if(arr1[i] == 0)
+                        arr1[i] = '1';
+                }
+                if(i < fc)
+                    arr1[i] = 0;
+            }
+            for(j = j - 1; j >= 0; j--){
+                if(joc[i])
+            }
+
+            printf("[");
+            for(int j = 0; j < fc; j++){
+                if(j == 0)
+                    printf("%d", arr1[j]);
+                else printf(", %d", arr1[j]);
+            }
+            printf("]\n");
+
+            printf("[");
+            for(int j = 0; j < fc; j++){
+                if(j == 0)
+                    printf("%d", arr2[j]);
+                else printf(", %d", arr2[j]);
+            }
+            printf("]\n");
+            break;
+        }else if(sum == 0){
+
+        }
+
+
+    }
+
+    return change;
+}
+
+void IA(int m, int n, int e, casella_t joc[][MAXROWCOL], int maxCombinations, char cantonades[][maxCombinations]){
+    int errorsMaquina = 0;
+    char cantonadesMaquina[m + n][maxCombinations];
+
+    for(int i = 0; i < m + n; i++){
+        int j;
+        for(j = 0; cantonades[i][j] != CENTINELLA; j++){
+            cantonadesMaquina[i][j] = cantonades[i][j];
+        }
+        cantonadesMaquina[i][j] = CENTINELLA;
+    }
+
+    while(!jocAcabat(m, n, joc) && errorsMaquina <= e){
+        while(!(overlapTech(m, n, joc, maxCombinations, cantonades))){
+            printTaulerJoc(m, n, joc, maxCombinations, cantonades);
+        }
+
+        break;
+    }
+
+    if(errorsMaquina > e){
+        printf("La maquina ha guanyat ");
+    } else printf("La maquina ha perdut en ");
+    printf("%d errors.", errorsMaquina);
 }
 
 int main()
@@ -275,28 +392,16 @@ int main()
     maxCombinations /= 2;
     maxCombinations++;
     char cantonades[n + m][maxCombinations];
-    printf("max = %d\n", maxCombinations);
     calcularCantonades(m, n, joc, maxCombinations, cantonades);
 
     printf("%d %d %d\n", m, n, maxErrors);
-
-    for(int i = 0; i < n + m; i++){
-        if(i < m){
-            printf("Fila (%d):", i + 1);
-        }else printf("Columna (%d):", i - m + 1);
-        int j;
-        for(j = 0; cantonades[i][j] != CENTINELLA; j++){
-            printf("%d ", cantonades[i][j]);
-        }
-        printf("; n=%d\n", j);
-    }
 
     printTaulerJoc(m, n, joc, maxCombinations, cantonades);
     boardToPBM("fitProva.pbm", m, n, joc);
 
     printf("Joc acabat %d\n", jocAcabat(m, n, joc));
 
-    //IA(m, n  , maxErrors, joc, cantonades);
-    //generarFitxerAleatori("fitProva.txt", rand() % (MAXROWCOL/2) + 1, rand() % (MAXROWCOL/4) + 1, 10, 50);
+    IA(m, n  , maxErrors, joc, maxCombinations, cantonades);
+    //generarFitxerAleatori("fitProva.txt", 5, 5, 10, 25);
     return 0;
 }
