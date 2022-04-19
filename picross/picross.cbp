@@ -34,9 +34,10 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="s.c">
+		<Unit filename="metodesPicross.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="metodesPicross.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
