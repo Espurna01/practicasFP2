@@ -259,6 +259,7 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
     printf("\n");
 }
 
+<<<<<<< Updated upstream
 /** \brief Seleccionar una posició en el tauler de joc. Revela la poscició i, j.
  *
  * \param m: dimensió de la taula (files), enter.
@@ -271,3 +272,26 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
  */
 
 bool seleccio(int m, int n, casella_t joc[][MAXROWCOL], int i, int j);
+=======
+bool seleccio(int m, int n, casella_t joc[][MAXROWCOL], int i, int j, bool flag)
+{
+
+    bool posicio_correcta;
+    posicio_correcta=i<m && j<n && i>=0 && j>=0;
+    if(joc[i][j].revelat)
+    {
+        if(joc[i][j].valor == '1'?254:'X')
+        {
+            posicio_correcta=false;
+        }
+    }
+    else(joc[i][j].flag)
+    {
+        if(joc[i][j].flag?'F':' ')
+        {
+            posicio_correcta=false;
+        }
+    }
+    return posicio_correcta;
+}
+>>>>>>> Stashed changes
