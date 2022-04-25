@@ -3,8 +3,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#define MAXROWCOL 50
+#define MAXROWCOL 30
 #define CENTINELLA -1
+#define CADMAX
 
 typedef struct{
     char valor; /**< valor de la casella {0, 1}; 0 si no hi ha un cuadrat, 1 si hi ha. */
@@ -98,5 +99,15 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
  */
 bool seleccio(int m, int n, casella_t joc[][MAXROWCOL], int i, int j, bool flag);
 
+/** \brief Escriu el menu per pantalla.
+ */
+void printMenu();
 
+/** \brief Afegeix .txt al final de la cadena de text i elimina el caracter '\n' del final.
+ *
+ * \param *fitxer: cadena de text a modificar, string.
+ * \return true si ha pogut afegir l'extensió i fals si no ha pogut.
+ * (Pablo)
+ */
+bool afegirExtensio(char *fitxer);
 #endif // METODESPICROSS_H_INCLUDED

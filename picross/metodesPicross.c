@@ -261,22 +261,23 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
 
 bool seleccio(int m, int n, casella_t joc[][MAXROWCOL], int i, int j, bool flag)
 {
-
     bool posicio_correcta;
-    posicio_correcta=i<m && j<n && i>=0 && j>=0;
-    if(joc[i][j].revelat)
-    {
-        if(joc[i][j].valor == '1'?254:'X')
-        {
-            posicio_correcta=false;
-        }
-    }
-    else(joc[i][j].flag)
-    {
-        if(joc[i][j].flag?'F':' ')
-        {
-            posicio_correcta=false;
-        }
+    posicio_correcta = i < m && j < n && i >= 0 && j >= 0 && !joc[i][j].revelat;
+    if(posicio_correcta){
+        joc[i][j].revelat = !flag;
+        joc[i][j].flag = flag;
     }
     return posicio_correcta;
 }
+
+void printMenu(){
+    printf("\t\t1. Carregar tauler.\n");
+    printf("\t\t2. Jugar.\n");
+    printf("\t\t3. Jugar en un tauler aleatori.\n");
+    printf("\t\t4. Normes.\n");
+    printf("\t\t5. Estrategies.\n");
+    printf("\t\t6. Records.\n");
+    printf("\t\t0. Sortir.\n");
+}
+
+bool afegirExtensio(char *fitxer);
