@@ -110,4 +110,13 @@ void printMenu();
  * (Pablo)
  */
 bool afegirExtensio(char *fitxer);
+
+/** \brief Restaura tot el tauler de joc deixant totes les posicions modificades (revelades/flag).
+ *
+ * \param n: dimensió de la taula (files), enter.
+ * \param m: dimensió de la taula (columnes), enter.
+ * \param joc[][MAXROWCOL]: tauler de joc, casella_t.
+ * ()
+ */
+void restaurarJoc(int m, int n, casella_t joc[][MAXROWCOL]);
 #endif // METODESPICROSS_H_INCLUDED

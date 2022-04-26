@@ -1,8 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#define MAXROWCOL 50
+#define MAXROWCOL 30
 #define CENTINELLA -1
+#define CADMAX 50
 
 typedef struct{
     char valor;
@@ -280,4 +281,28 @@ void printMenu(){
     printf("\t\t0. Sortir.\n");
 }
 
-bool afegirExtensio(char *fitxer, printMenu);
+bool afegirExtensio(char* fitxer){
+
+    int saltLinea = 0;
+    while(fitxer[saltLinea] != '\n' && saltLinea < CADMAX){
+        saltLinea++;
+    }
+
+    if(saltLinea + 5 >= CADMAX){ /**< {'.', 't', 'x', 't', '\0'} */
+        return false;
+    }
+
+    fitxer[saltLinea] = '.';
+    saltLinea++;
+    fitxer[saltLinea] = 't';
+    saltLinea++;
+    fitxer[saltLinea] = 'x';
+    saltLinea++;
+    fitxer[saltLinea] = 't';
+    saltLinea++;
+    fitxer[saltLinea] = '\0';
+
+    return true;
+}
+
+void restaurarJoc(int m, int n, casella_t joc[][MAXROWCOL]);
