@@ -270,14 +270,22 @@ bool seleccio(int m, int n, casella_t joc[][MAXROWCOL], int i, int j, bool flag)
     return posicio_correcta;
 }
 
-void printMenu(){
+void printMenu(char* filename, casella_t joc[][MAXROWCOL], bool afegirExtensio){
+    FILE *fit fopen(filename, a);
+    int comprovar = stat(filename, a);
     printf("\t\t1. Carregar tauler.\n");
     printf("\t\t2. Jugar.\n");
     printf("\t\t3. Jugar en un tauler aleatori.\n");
     printf("\t\t4. Normes.\n");
     printf("\t\t5. Estrategies.\n");
     printf("\t\t6. Records.\n");
-    printf("\t\t0. Sortir.\n");
+    printf("\t\t0. Sortir.\n")
+
 }
 
-bool afegirExtensio(char *fitxer);
+bool afegirExtensio(char *fitxer, printMenu)
+  printMenu
+  if(comprovar == 0)
+    return true;
+  else
+    return false;
