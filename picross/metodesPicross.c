@@ -129,6 +129,7 @@ bool boardToPBM(char *filename, int m, int n, casella_t joc[][MAXROWCOL]){
         for(int j = 0; j < n; j++){
             fputc(joc[i][j].valor, fit);
         }
+        fputc('\n', fit);
     }
     fclose(fit);
     return true;
@@ -288,9 +289,8 @@ void printMenu(){
     printf("\t\t3. Jugar en un tauler aleatori.\n");
     printf("\t\t4. Normes.\n");
     printf("\t\t5. Estrategies.\n");
-    printf("\t\t6. Records.\n");
-    printf("\t\t7. Generar fitxer aleatori.\n");
-    printf("\t\t8. Tauler a imatge pbm.\n");
+    printf("\t\t6. Generar fitxer aleatori.\n");
+    printf("\t\t7. Tauler a imatge pbm.\n");
     printf("\t\t0. Sortir.\n");
 }
 
@@ -301,7 +301,7 @@ bool afegirExtensio(char* fitxer, char *extensio){
         saltLinea++;
     }
 
-    if(saltLinea + 5 >= CADMAX){ /**< {'.', 't', 'x', 't', '\0'} */
+    if(saltLinea + 5 >= CADMAX){ /**< {'.', 't', 'x', 't', '\0'}/{'.', 'p', 'b', 'm', '\0'} */
         return false;
     }
     int i;
@@ -314,7 +314,12 @@ bool afegirExtensio(char* fitxer, char *extensio){
 }
 
 void restaurarJoc(int m, int n, casella_t joc[][MAXROWCOL]){
-    return;
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++){
+            joc[i][j].flag = false;
+            joc[i][j].revelat = false;
+        }
+    }
 }
 
 bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int maxErrors){
@@ -428,7 +433,7 @@ void taulerAleatori(int m, int n, casella_t joc[][MAXROWCOL]){
     for(int i = 0; i < m; i++){
         for(int j = 0; j < n; j++){
             char a = (rand() % 100 + 1) <= density;
-            a = a + 48; /**< ascii(0) = 48 */
+            a = a + 48; /**< ascii('0') = 48 */
             joc[i][j].valor = a;
             joc[i][j].revelat = false;
             joc[i][j].flag = false;

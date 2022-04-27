@@ -126,9 +126,7 @@ int main()
         case 5:
             break;
         case 6:
-            break;
-        case 7:
-            printf("\n\t\tHas triat la opcio 7.\n\n");
+            printf("\n\t\tHas triat la opcio 6.\n\n");
             printf("\tQuin nom tindra l'arxiu?(sense la extensio .txt)\n\t");
             fgets(pbm, CADMAX, stdin);
             if(afegirExtensio(pbm, ".txt")){
@@ -155,8 +153,8 @@ int main()
                     }
                 }else printf("\n\tNO s'ha pogut afegir l'extensio el nom es massa llarg.");
             break;
-        case 8:
-            printf("\n\t\tHas triat la opcio 8.\n\n");
+        case 7:
+            printf("\n\t\tHas triat la opcio 7.\n\n");
             if(carregatCorrectament || partidaAleatoria){
                 printf("\tQuin nom tindra l'arxiu?(sense la extensio .pbm)\n\t");
                 fgets(pbm, CADMAX, stdin);
