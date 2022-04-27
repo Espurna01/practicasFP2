@@ -103,13 +103,14 @@ bool seleccio(int m, int n, casella_t joc[][MAXROWCOL], int i, int j, bool flag)
  */
 void printMenu();
 
-/** \brief Afegeix .txt al final de la cadena de text i elimina el caracter '\n' del final.
+/** \brief Afegeix la extensio al final de la cadena de text i elimina el caracter '\n' del final.
  *
  * \param *fitxer: cadena de text a modificar, string.
+ * \param *extensio: cadena de text que conte l'extensio a afegir, string.
  * \return true si ha pogut afegir l'extensió i fals si no ha pogut.
  * (Pablo)
  */
-bool afegirExtensio(char *fitxer);
+bool afegirExtensio(char *fitxer, char *extensio);
 
 /** \brief Restaura tot el tauler de joc deixant totes les posicions modificades (revelades/flag).
  *

@@ -7,7 +7,7 @@ int main()
     int m, n, maxErrors, opcio;
     int errorsActuals = 0;
     bool carregatCorrectament = false, partidaAleatoria = false, partidaGuardada = false, primeraTriada = false;
-    char fitxer[CADMAX];
+    char fitxer[CADMAX], pbm[CADMAX];
     casella_t joc[MAXROWCOL][MAXROWCOL];
 
     printf("\n\n\t\t\t\t\t%c", 201);
@@ -56,11 +56,12 @@ int main()
         case 1:
             printf("\n\t\tHas triat la opcio 1.\n\n\tQuin es el nom del fitxer? (sense la extensio .txt)\n\t");
             fgets(fitxer, CADMAX, stdin);
-            if(afegirExtensio(fitxer)){
+            if(afegirExtensio(fitxer, ".txt")){
                 carregatCorrectament = carregarDades(fitxer, &m, &n, &maxErrors, joc);
                 if(!carregatCorrectament){
                     printf("\tNo s'ha pogut carregar correctament el fitxer, potser l'has escrit malament o les dades que conte no son correctes.");
                 }
+                partidaAleatoria = false;
             } else {
                 printf("\tNo s'ha pogut afegir l'extensio del fitxer (\".txt\") correctament, el nom es mass llarg (max:%d).", CADMAX);
             }
@@ -89,11 +90,12 @@ int main()
             }
             break;
         case 3:
+            printf("\n\t\tHas triat la opcio 3.\n\n");
             if(partidaGuardada){
                 printf("\tTens una partida d'un tauler");
                 if(partidaAleatoria)
-                    printf("ALEATORI ");
-                else printf("CARREGAT ");
+                    printf(" ALEATORI ");
+                else printf(" CARREGAT ");
                 printf("ja comen%cat amb %d/%d errors.", 135, errorsActuals, maxErrors);
 
                 do{
@@ -107,16 +109,65 @@ int main()
                 n = (rand() % 3 + 1) * 5;   /**< {5, 10, 15} */
                 maxErrors = (m * n)/(m + n);
                 taulerAleatori(m, n, joc);
+                partidaGuardada = !jugar(m, n, joc, &errorsActuals, maxErrors);
+                partidaAleatoria = true;
+                carregatCorrectament = false;
+            } else if(partidaAleatoria){
+                partidaGuardada = !jugar(m, n, joc, &errorsActuals, maxErrors);
+                partidaAleatoria = true;
+                carregatCorrectament = false;
             }
-            partidaGuardada = !jugar(m, n, joc, &errorsActuals, maxErrors);
-            partidaAleatoria = true;
-            carregatCorrectament = false;
+
+            opcio = 3;
+
             break;
         case 4:
             break;
         case 5:
             break;
         case 6:
+            break;
+        case 7:
+            printf("\n\t\tHas triat la opcio 7.\n\n");
+            printf("\tQuin nom tindra l'arxiu?(sense la extensio .txt)\n\t");
+            fgets(pbm, CADMAX, stdin);
+            if(afegirExtensio(pbm, ".txt")){
+                    int newm, newn, errors;
+                    do{
+                        printf("\n\tQuantes files vols que tingui([1, %d])? ", MAXROWCOL);
+                        scanf(" %d", &newm);
+                    }while(newm < 1 || newm > MAXROWCOL);
+
+                    do{
+                        printf("\n\tQuantes columnes vols que tingui([1, %d])? ", MAXROWCOL);
+                        scanf(" %d", &newn);
+                    }while(newn < 1 || newn > MAXROWCOL);
+
+                    do{
+                        printf("\n\tQuants errors maxims vols que tingui un tauler de %dx%d? ", newm, newn);
+                        scanf(" %d", &errors);
+                    }while(errors <= 0);
+
+                    if(generarFitxerAleatori(pbm, newm, newn, errors, (rand() % 4 + 1) * 20)){
+                        printf("\n\tS'ha generat l'arxiu %s de %dx%d.", pbm, newn, newm);
+                    }else {
+                        printf("\n\tNO s'ha pogut generar l'arxiu %s.", pbm);
+                    }
+                }else printf("\n\tNO s'ha pogut afegir l'extensio el nom es massa llarg.");
+            break;
+        case 8:
+            printf("\n\t\tHas triat la opcio 8.\n\n");
+            if(carregatCorrectament || partidaAleatoria){
+                printf("\tQuin nom tindra l'arxiu?(sense la extensio .pbm)\n\t");
+                fgets(pbm, CADMAX, stdin);
+                if(afegirExtensio(pbm, ".pbm")){
+                    if(boardToPBM(pbm, m, n, joc)){
+                        printf("\n\tS'ha guardat el tauler com a imatge a l'arxiu %s.", pbm);
+                    }else {
+                        printf("\n\tNO s'ha pogut el tauler com a imatge a l'arxiu %s.", pbm);
+                    }
+                }else printf("\n\tNO s'ha pogut afegir l'extensio el nom es massa llarg.");
+            }
             break;
         case 0:
             printf("\n\tAdeuuu!!\n");
