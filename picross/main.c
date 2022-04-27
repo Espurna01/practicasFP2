@@ -28,7 +28,33 @@ int main()
     printTaulerJoc(m, n, joc, maxCombinations, cantonades);
     boardToPBM("fitProva.pbm", m, n, joc);
 
+<<<<<<< Updated upstream
     printf("Joc acabat %d\n", jocAcabat(m, n, joc));
+=======
+                    system("pause");
+                }
+            }
+            break;
+        case 3:
+            /**< (Marc Reverté) */
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        case 6:
+            break;
+        case 0:
+            printf("Adeuuu!!\n");
+            break;
+        default:
+            printf("Aquesta opcio no existeix...\n");
+            break;
+        }
+        system("pause");
+        system("cls");
+    }while(opcio != 0);
+>>>>>>> Stashed changes
 
     //IA(m, n  , maxErrors, joc, maxCombinations, cantonades);
     generarFitxerAleatori("fitProva.txt", rand() % MAXROWCOL + 1, rand() % MAXROWCOL + 1, 10, 75);
