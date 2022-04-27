@@ -1,41 +1,14 @@
 # depslib dependency file v1.0
-1650899475 source:c:\urv\fpii\practicasfp2\picross\main.c
+1651075905 source:c:\urv\fpii\practicasfp2\picross\main.c
 	"metodesPicross.h"
 	<time.h>
 
-1651044487 source:c:\urv\fp2\practicas\picross\main.c
-	"metodesPicross.h"
-	<time.h>
-
-1648815616 source:c:\urv\fp2\practicas\picross\s.c
-
-1650348576 source:c:\urv\fpii\practicasfp2\picross\s.c
-
-1650897474 c:\urv\fpii\practicasfp2\picross\metodespicross.h
+1651072307 c:\urv\fpii\practicasfp2\picross\metodespicross.h
 	<stdlib.h>
 	<stdio.h>
 	<stdbool.h>
 
-1650893468 source:c:\urv\fpii\practicasfp2\picross\metodespicross.c
-	<stdlib.h>
-	<stdio.h>
-	<stdbool.h>
-
-1650351854 source:c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practices fpii\practiques fpii\practicasfp2\picross\main.c
-	"metodesPicross.h"
-	<time.h>
-
-1650744693 c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practices fpii\practiques fpii\practicasfp2\picross\metodespicross.h
-	<stdlib.h>
-	<stdio.h>
-	<stdbool.h>
-
-1651043865 c:\urv\fp2\practicas\picross\metodespicross.h
-	<stdlib.h>
-	<stdio.h>
-	<stdbool.h>
-
-1651045566 source:c:\urv\fp2\practicas\picross\metodespicross.c
+1651072103 source:c:\urv\fpii\practicasfp2\picross\metodespicross.c
 	<stdlib.h>
 	<stdio.h>
 	<stdbool.h>
