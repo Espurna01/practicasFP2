@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #define MAXROWCOL 30
 #define CENTINELLA -1
-#define CADMAX
+#define CADMAX 50
 
 typedef struct{
     char valor; /**< valor de la casella {0, 1}; 0 si no hi ha un cuadrat, 1 si hi ha. */
@@ -110,4 +110,40 @@ void printMenu();
  * (Pablo)
  */
 bool afegirExtensio(char *fitxer);
+
+/** \brief Restaura tot el tauler de joc deixant totes les posicions modificades (revelades/flag).
+ *
+ * \param m: dimensió de la taula (files), enter.
+ * \param n: dimensió de la taula (columnes), enter.
+ * \param joc[][MAXROWCOL]: tauler de joc, casella_t.
+ * ()
+ */
+void restaurarJoc(int m, int n, casella_t joc[][MAXROWCOL]);
+
+/** \brief A partir d'un tauler de joc, demana a l'usuari posicions fins a que perd el joc o el guanya.
+ *
+ * \param m: dimensió de la taula (files), enter.
+ * \param n: dimensió de la taula (columnes), enter.
+ * \param joc[][MAXROWCOL]: tauler de joc, casella_t.
+ * \param *errorsActuals: errors actuals de l'usuari, enter.
+ * \param maxErrors: errors maxims del tauler actual, enter.
+ * \return true si el joc s'ha acabat (guanyat o perdut) fals si l'ususari l'ha pospos.
+ * (Matias Ariel Larrosa Babio)
+ */
+bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int maxErrors);
+
+/** \brief Emplena un tauler de m x n aleatoriament.
+ *
+ * \param m: dimensió de la taula (files), enter.
+ * \param n: dimensió de la taula (columnes), enter.
+ * \param joc[][MAXROWCOL]: tauler de joc, casella_t.
+ * (Matias Ariel Larrosa Babio)
+ */
+void taulerAleatori(int m, int n, casella_t joc[][MAXROWCOL]);
+
+/** \brief Neteja el buffer de l'usuari '\n' i els possibles espais i caracters brossa que hagi deixat.
+ *
+ * (Matias Ariel Larrosa Babio)
+ */
+void clearBuffer();
 #endif // METODESPICROSS_H_INCLUDED
