@@ -1,6 +1,6 @@
 #include "metodesPicross.h"
 #include <time.h>
-#define CADMAX 50
+
 int main()
 {
     srand(time(NULL));
