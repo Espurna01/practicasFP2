@@ -199,8 +199,12 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
                 }
             }
         }
-        printf("%c\n", 186);
+        printf("%c", 186);
+        if(i == maxBlocsN - 1)
+            printf("y");
+        printf("\n");
     }
+
 
     for(int i = 0; i < m; i++){
         printf("\t\t%c", 186);
@@ -243,21 +247,28 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
 
         for(int j = 0; j < n; j++){
             printf("|");
-            if(joc[i][j].revelat)
+            if(!joc[i][j].revelat)
                 printf("%c", joc[i][j].valor == '1'?254:'X');
             else printf("%c", joc[i][j].flag?'F':' ');
             for(int k = 1; k < maxDigitsN; k++){
                 printf(" ");
             }
         }
-        printf("%c\n", 186);
+        printf("%c%d\n", 186, i + 1);
+
     }
 
     printf("\t\t%c", 200);
     for(int i = 0; i < maxDigitsM * 2 + (maxDigitsN - 1) * n + n * 2;i++)
         printf("%c", 205);
-    printf("%c\n", 188);
-    printf("\n");
+    printf("%c\n\t\t", 188);
+
+    for(int j = 0; j < maxDigitsM * 2; j++){
+        printf(" ");
+    }
+    printf("x ->");
+
+    printf("\n\n");
 }
 
 bool seleccio(int m, int n, casella_t joc[][MAXROWCOL], int i, int j, bool flag)
@@ -273,7 +284,7 @@ bool seleccio(int m, int n, casella_t joc[][MAXROWCOL], int i, int j, bool flag)
 
 void printMenu(){
     printf("\t\t1. Carregar tauler.\n");
-    printf("\t\t2. Jugar.\n");
+    printf("\t\t2. Jugar joc carregat.\n");
     printf("\t\t3. Jugar en un tauler aleatori.\n");
     printf("\t\t4. Normes.\n");
     printf("\t\t5. Estrategies.\n");
@@ -305,4 +316,108 @@ bool afegirExtensio(char* fitxer){
     return true;
 }
 
-void restaurarJoc(int m, int n, casella_t joc[][MAXROWCOL]);
+void restaurarJoc(int m, int n, casella_t joc[][MAXROWCOL]){
+    return;
+}
+
+bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int maxErrors){
+    int maxCombinations = m > n?m:n;
+
+    maxCombinations = maxCombinations + maxCombinations % 2;
+    maxCombinations /= 2;
+    maxCombinations++;
+    char cantonades[n + m][maxCombinations];
+    calcularCantonades(m, n, joc, maxCombinations, cantonades);
+    int i = -1, j = -1;
+    while(*errorsActuals < maxErrors && !jocAcabat(m, n, joc)){
+        system("cls");
+        printf("\n\n\tUltima posicio triada (");
+
+        if(i == -1){
+            printf(", )");
+        }else printf("%d, %d)", i, j);
+        printf(". Errors %d/%d. Tauler %dx%d:\n\n", *errorsActuals, maxErrors, n, m);
+        printTaulerJoc(m, n, joc, maxCombinations, cantonades);
+
+        int flag;
+        do{
+            printf("\tSeleccionar caselles (0), posar banderes (1), sortir (2): ");
+            scanf(" %d", &flag);
+        }while(flag != 1 && flag != 0 && flag != 2);
+
+        if(flag == 2)
+            break;
+
+        do{
+            printf("\tEscull una columna (x = [1, %d] o tota la taula (%d)): ", n, n + 1);
+            scanf(" %d", &i);
+        }while(i < 1 || i >= n + 1);
+
+        if(i != n + 1){
+            do{
+                system("cls");
+
+                printf("\n\n\tUltima posicio triada (");
+
+                if(i == -1 || j == -1){
+                    printf(", )");
+                }else printf("%d, %d)", i, j);
+                printf(". Errors %d/%d. Tauler %dx%d:\n\n", *errorsActuals, maxErrors, n, m);
+                printTaulerJoc(m, n, joc, maxCombinations, cantonades);
+
+                printf("\n\tEscull totes les files de la columna %d que vulguis, escriu 0 per sortir:", i);
+
+                printf("\n\t[1, %d] o tota la columna (%d): ", m, m + 1);
+                scanf(" %d", &j);
+                if(seleccio(m, n, joc, j - 1, i - 1, flag)){
+                    if(!flag && joc[j - 1][i - 1].valor == '0'){
+                        (*errorsActuals)++;
+                    }
+                }
+            }while(j != 0 && *errorsActuals < maxErrors);
+        }else{
+//            int i;
+//            while(*errorsActuals < maxErrors){
+//                i = 0;
+//                while(*errorsActuals < maxErrors && j < n){
+//                    int j = 0;
+//                }
+//            }
+        }
+
+    }
+    system("cls");
+    if(*errorsActuals >= maxErrors){
+        printf("\n\n\tHas arribat al limit de errors permesos, hauras de comen%car de nou.\n\n", 135);
+    }else if (jocAcabat(m, n, joc)){
+        printf("\n\n\tFelicitats has guanyat! Cometent %d errors.\n\n", *errorsActuals);
+    } else {
+        printf("\n\n\tLa partida quedara guardada. Quan vulguis continuar torna a seleccionar aquesta opcio.");
+        return false;
+    }
+    printTaulerJoc(m, n, joc, maxCombinations, cantonades);
+    *errorsActuals = 0;
+    restaurarJoc(m, n, joc);
+    return true;
+
+}
+
+void taulerAleatori(int m, int n, casella_t joc[][MAXROWCOL]){
+    int density = (rand() % 10 + 1) * 10;
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++){
+            char a = (rand() % 100 + 1) <= density;
+            a = a + 48; /**< ascii(0) = 48 */
+            joc[i][j].valor = a;
+            joc[i][j].revelat = false;
+            joc[i][j].flag = false;
+        }
+    }
+}
+
+void clearBuffer(){
+    char buffer = 0;
+    while(buffer != '\n'){
+        scanf("%c", &buffer);
+    }
+}

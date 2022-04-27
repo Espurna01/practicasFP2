@@ -4,10 +4,10 @@
 int main()
 {
     srand(time(NULL));
-    int m, n, maxErrors, opcio, max, maxCombinations;
+    int m, n, maxErrors, opcio;
     int errorsActuals = 0;
-    bool carregatCorrectament = false;
-    char fitxer[CADMAX], buffer;
+    bool carregatCorrectament = false, partidaAleatoria = false, partidaGuardada = false, primeraTriada = false;
+    char fitxer[CADMAX];
     casella_t joc[MAXROWCOL][MAXROWCOL];
 
     printf("\n\n\t\t\t\t\t%c", 201);
@@ -25,10 +25,33 @@ int main()
     printf("%c\n", 188);
 
     do{
+        if(primeraTriada){
+            printf("\n\n\t");
+            if(partidaGuardada){
+                printf("Tens una partida (");
+                if(partidaAleatoria)
+                    printf("aleatoria");
+                else printf("carregada");
+                printf(") guardada de %dx%d amb %d/%d errors.", n, m, errorsActuals, maxErrors);
+                if(!partidaAleatoria){
+                    printf(" \"%s\"", fitxer);
+                }
+
+            }else{
+                if(carregatCorrectament){
+                    printf("Tens un tauler carregat (\"%s\") de %dx%d amb un maxim de errors de %d, pots jugar-lo amb op.2 o generar un aleatori op.3.", fitxer, n, m, maxErrors);
+                }else {
+                    printf("No tens cap tauler carregat, per carregar pots carregar un amb op.1 o pots generar un aleatori amb la op.3.");
+                }
+
+            }
+            printf("\n\tPots consultar les normes del joc op.4, les estrategies del joc op.5 i els records personals op.6.\n\n");
+        }
         printMenu();
         printf("\n\tQuina opcio vols triar?  ");
         scanf(" %d", &opcio);
-        scanf("%c", &buffer);
+        clearBuffer();
+
         switch(opcio){
         case 1:
             printf("\n\t\tHas triat la opcio 1.\n\n\tQuin es el nom del fitxer? (sense la extensio .txt)\n\t");
@@ -43,46 +66,51 @@ int main()
             }
             break;
         case 2:
+            printf("\n\t\tHas triat la opcio 2.\n\n");
             if(carregatCorrectament){
-                max = m > n?m:n;
-                maxCombinations = max % 2 != 0?max + 1: max;
-                maxCombinations /= 2;
-                maxCombinations++;
-                char cantonades[n + m][maxCombinations];
-                calcularCantonades(m, n, joc, maxCombinations, cantonades);
-                int i = -1, j;
-                while(!jocAcabat(m, n, joc) && errorsActuals < maxErrors){
-                    system("cls");
-
-                    printf("\n\n\tUltima posicio triada (");
-
-                    if(i == -1){
-                        printf(", )");
-                    }else printf("%d, %d)", i, j);
-
-                    printf(". Errors %d/%d.\n\n", errorsActuals, maxErrors);
-
-                    printTaulerJoc(m, n, joc, maxCombinations, cantonades);
-
+                if(partidaGuardada){
+                    printf("\tTens una partida d'un tauler CARREGAT ja comen%cada amb %d/%d errors.", 135, errorsActuals, maxErrors);
                     do{
-                        printf("\tQuina casella vols triar(x y -> x = [1, %d], y = [1, %d])?\t", n, m);
-                        scanf(" %d", &i);
-                        scanf(" %d", &j);
-                    }while(!seleccio(m, n, joc, j - 1, i - 1, false));
-                    if(joc[j - 1][i - 1].valor == '0'){
-                        errorsActuals++;
+                        printf("\n\tVols continuar la partida(1/0)? ");
+                        scanf(" %d", &opcio);
+                    }while(opcio != 1 && opcio != 0);
+
+                    if(!opcio){
+                        restaurarJoc(m, n, joc);
                     }
                 }
-                if(errorsActuals >= maxErrors){
-                    printf("\n\n\tHas arribat al limtit de errors permesos, hauras de començar de nou.\n\n");
-                    errorsActuals = 0;
-                    restaurarJoc(m, n, joc);
-                }else if(jocAcabat(m, n, joc)){
-                    printf("\n\n\tFelicitats has guanyat! Cometent %d errors.\n\n", errorsActuals);
-                }
+                partidaGuardada = !jugar(m, n, joc, &errorsActuals, maxErrors);
+                partidaAleatoria = false;
+            }else {
+                if(partidaAleatoria){
+                    printf("\tHi ha generada una partida ALEATORIA si vols jugar un tauler aleatori selecciona (op.3) sino, carrega un tauler(op.1)...\n");
+                }else
+                    printf("\tNo hi ha cap tauler carregat hauras de carregar un...(opcio 1)\n");
             }
             break;
         case 3:
+            if(partidaGuardada){
+                printf("\tTens una partida d'un tauler");
+                if(partidaAleatoria)
+                    printf("ALEATORI ");
+                else printf("CARREGAT ");
+                printf("ja comen%cat amb %d/%d errors.", 135, errorsActuals, maxErrors);
+
+                do{
+                    printf("\n\tVols sobreescriure-la(1/0)? ");
+                    scanf(" %d", &opcio);
+                }while(opcio != 1 && opcio != 0);
+            } else opcio = 1;
+
+            if(opcio){
+                m = (rand() % 3 + 1) * 5;   /**< {5, 10, 15} */
+                n = (rand() % 3 + 1) * 5;   /**< {5, 10, 15} */
+                maxErrors = (m * n)/(m + n);
+                taulerAleatori(m, n, joc);
+            }
+            partidaGuardada = !jugar(m, n, joc, &errorsActuals, maxErrors);
+            partidaAleatoria = true;
+            carregatCorrectament = false;
             break;
         case 4:
             break;
@@ -91,16 +119,19 @@ int main()
         case 6:
             break;
         case 0:
-            printf("Adeuuu!!\n");
+            printf("\n\tAdeuuu!!\n");
             break;
         default:
             printf("Aquesta opcio no existeix...\n");
             break;
         }
+        printf("\n\t");
         system("pause");
         system("cls");
+        primeraTriada = true;
     }while(opcio != 0);
 
+    printf("He salido opcio %d", opcio);
 //
 //    printf("%d %d %d\n", m, n, maxErrors);
 //
