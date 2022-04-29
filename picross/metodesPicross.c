@@ -287,10 +287,9 @@ void printMenu(){
     printf("\t\t1. Carregar tauler.\n");
     printf("\t\t2. Jugar joc carregat.\n");
     printf("\t\t3. Jugar en un tauler aleatori.\n");
-    printf("\t\t4. Normes.\n");
-    printf("\t\t5. Estrategies.\n");
-    printf("\t\t6. Generar fitxer aleatori.\n");
-    printf("\t\t7. Tauler a imatge pbm.\n");
+    printf("\t\t4. Estrategies.\n");
+    printf("\t\t5. Generar fitxer aleatori.\n");
+    printf("\t\t6. Tauler a imatge pbm.\n");
     printf("\t\t0. Sortir.\n");
 }
 
@@ -311,6 +310,25 @@ bool afegirExtensio(char* fitxer, char *extensio){
     fitxer[i + saltLinea] = '\0';
 
     return true;
+}
+
+bool combinarPath(char *fitxer, char *path, char *pathFinal){
+    int indexfinal;
+    for(indexfinal = 0; path[indexfinal] != '\0'; indexfinal++){
+        pathFinal[indexfinal] = path[indexfinal];
+    }
+
+    int indexfit = 0;
+    while(fitxer[indexfit] != '\0' && indexfit + indexfinal < CADMAX){
+        pathFinal[indexfinal + indexfit] = fitxer[indexfit];
+        indexfit++;
+    }
+    if(indexfit + indexfinal < CADMAX){
+        pathFinal[indexfinal + indexfit] = '\0';
+        return true;
+    }
+    pathFinal[0] = '\0';
+    return false;
 }
 
 void restaurarJoc(int m, int n, casella_t joc[][MAXROWCOL]){

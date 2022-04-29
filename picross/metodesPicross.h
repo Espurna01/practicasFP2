@@ -112,12 +112,22 @@ void printMenu();
  */
 bool afegirExtensio(char *fitxer, char *extensio);
 
+/** \brief Ajunta un path relatiu i el nom d'un fitxer en pathFinal
+ *
+ * \param *fitxer: nom del fitxer a crear, string.
+ * \param *path: path del directori relatiu, string.
+ * \param *pathFinal: path relatiu del fitxer, string.
+ * \return true si s'han pogut ajuntar el path i el fitxer, false si no.
+ * (Matias Ariel Larrosa Babio)
+ */
+bool combinarPath(char *fitxer, char *path, char *pathFinal);
+
 /** \brief Restaura tot el tauler de joc deixant totes les posicions modificades (revelades/flag).
  *
  * \param m: dimensió de la taula (files), enter.
  * \param n: dimensió de la taula (columnes), enter.
  * \param joc[][MAXROWCOL]: tauler de joc, casella_t.
- * ()
+ * (Matias Ariel Larrosa Babio)
  */
 void restaurarJoc(int m, int n, casella_t joc[][MAXROWCOL]);
 
