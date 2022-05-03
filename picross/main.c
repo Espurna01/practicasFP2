@@ -1,6 +1,8 @@
 #include "metodesPicross.h"
 #include <time.h>
+/**< Documentacio:
 
+ */
 int main()
 {
     srand(time(NULL));
@@ -47,7 +49,7 @@ int main()
                     printf("No tens cap tauler carregat, per carregar pots carregar un amb op.1 o pots generar un aleatori amb la op.3.");
                 }
             }
-            printf("\n\tPots consultar les normes del joc op.4 i les estrategies del joc op.5.\n\n");
+            printf("\n\tPots consultar les instruccions de joc amb op.4.\n\n");
         }
         printMenu();
         printf("\n\tQuina opcio vols triar?  ");
@@ -62,7 +64,6 @@ int main()
                 carregatCorrectament = carregarDades(pathFinal, &m, &n, &maxErrors, joc);
                 if(!carregatCorrectament){
                     printf("\tNo s'ha pogut carregar correctament el fitxer, potser l'has escrit malament, no existeix al path %s o no te les dades correctes.\n", taulersPath);
-                    printf("%s\n", pathFinal);
                 }
                 partidaAleatoria = false;
             } else {
@@ -128,8 +129,7 @@ int main()
         case 4:
             {
                 system("cls");
-                printf("\n\n\t\tEstrategies de pi(C)ross i de nonogrames en general:\n\n");
-                printf("\tAccions particulars de pi(C)ross:\n\n");
+                printf("\n\n\t\tInstruccions de pi(C)ross:\n\n");
                 printf("\tLa manera que tenim de seleccionar posicions en el nostre programa es triar primer\n");
                 printf("\tuna columna i despres triar totes les files que vulguis seleccionar dins d'aquesta.\n");
                 printf("\tD'aquesta manera es poden triar caselles mes rapid sempre i quan hi hagin menys o\n");
@@ -138,39 +138,13 @@ int main()
                 printf("\tcolumnes o caselles, pots seleccionar un nombre especial (columnes + 1/files + 1)\n");
                 printf("\tper a que automaticament seleccionar totes les caselles que no estiguin marcades\n");
                 printf("\tamb banderes (flags).\n\n");
-                printf("\t\tFlags\n\n");
+                printf("\tFlags\n\n");
                 printf("\tUn flag o bandera es una posicio en el tauler que l'usuari pot seleccionar per\n");
                 printf("\tper marcarla com a espai buit sense haber de revelar-la. Aixo, no significa que\n");
                 printf("\tl'usuari no la pugi revelar sino que si utilitzen el nombre especial marcat la maquina\n");
                 printf("\tautomaticament no la triara.\n\n");
-                printf("\tEstrategies:\n\n");
-                printf("\t\tOverlap technique\n\n");
-                printf("\tEn general es pot donar quan tenim una cantonada que compleix:\n\t");
-                printf("\tsuma(cantonada) + (nombre(cantonada) - 1) >= ceil(caselles/2)\n");
-                printf("\tLlavors tenim un cas de un overlap i, en el cas de que es compleixi = caselles i haura\n");
-                printf("\tnomes una posible combinacio de blocs en aquella cantonada. On, suma(cantonada) es la\n");
-                printf("\tsuma de tots els valors que hi ha a la cantonada, nombre(cantonada) es el nombre de\n");
-                printf("\tnumeros que hi ha en aquella cantonada (nombre(2 2) = 2). Per exemple, en un tauler de\n");
-                printf("\t5x5 les cantonades:\n");
-                printf("\t\t\t|Cantonada|       Formula\t|Overlap|\n");
-                printf("\t\t\t|    1    |    1 + 1 - 1 >= 3\t|  no\t|\n");
-                printf("\t\t\t|   1 1   |    2 + 2 - 1 >= 3\t|  no!\t|\n");
-                printf("\t\t\t|  1 1 1  |    3 + 3 - 1 >= 3\t|  si*\t|\n");
-                printf("\t\t\t|   1 2   |    3 + 2 - 1 >= 3\t|  si\t|\n");
-                printf("\t\t\t|   1 3   |    4 + 2 - 1 >= 3\t|  si*\t|\n");
-                printf("\t\t\t|    2    |    2 + 1 - 1 >= 3\t|  no\t|\n");
-                printf("\t\t\t|   2 2   |    4 + 2 - 1 >= 3\t|  si*\t|\n");
-                printf("\t\t\t|    3    |    3 + 1 - 1 >= 3\t|  si\t|\n");
-                printf("\t\t\t|    4    |    4 + 1 - 1 >= 3\t|  si\t|\n");
-                printf("\t\t\t|    5    |    5 + 1 - 1 >= 3\t|  si*\t|\n");
-
-
-
-
-
-
-
-
+                printf("\tPer marcar una casella com a flag, nomes cal afegir una f (5f || 5 f) al final d'una\n");
+                printf("\tseleccio, tan com si s'estiguin seleccionant columnes o files.\n\n");
             }
             break;
         case 5:
@@ -228,7 +202,6 @@ int main()
         primeraTriada = true;
     }while(opcio != 0);
 
-    printf("He salido opcio %d", opcio);
 //
 //    printf("%d %d %d\n", m, n, maxErrors);
 //

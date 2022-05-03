@@ -131,6 +131,12 @@ bool combinarPath(char *fitxer, char *path, char *pathFinal);
  */
 void restaurarJoc(int m, int n, casella_t joc[][MAXROWCOL]);
 
+/** \brief Neteja el buffer de l'usuari '\n' i els possibles espais i caracters brossa que hagi deixat.
+ *
+ * (Matias Ariel Larrosa Babio)
+ */
+void clearBuffer();
+
 /** \brief A partir d'un tauler de joc, demana a l'usuari posicions fins a que perd el joc o el guanya.
  *
  * \param m: dimensió de la taula (files), enter.
@@ -152,9 +158,4 @@ bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int max
  */
 void taulerAleatori(int m, int n, casella_t joc[][MAXROWCOL]);
 
-/** \brief Neteja el buffer de l'usuari '\n' i els possibles espais i caracters brossa que hagi deixat.
- *
- * (Matias Ariel Larrosa Babio)
- */
-void clearBuffer();
 #endif // METODESPICROSS_H_INCLUDED

@@ -135,7 +135,7 @@ bool boardToPBM(char *filename, int m, int n, casella_t joc[][MAXROWCOL]){
     return true;
 }
 
-void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombinations, char cantonades[][maxCombinations]){
+void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombinations, char cantonades[][maxCombinations], int marca){
     int maxBlocsM = 0;
     int maxDigitsM = 0;
     int maxBlocsN = 0;
@@ -267,7 +267,12 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
     for(int j = 0; j < maxDigitsM * 2; j++){
         printf(" ");
     }
-    printf("x ->");
+
+    if(marca){
+        for(int i = 0; i < marca; i++)
+            printf("  ");
+        printf("%c", 24);
+    }else printf("x ->");
 
     printf("\n\n");
 }
@@ -287,7 +292,7 @@ void printMenu(){
     printf("\t\t1. Carregar tauler.\n");
     printf("\t\t2. Jugar joc carregat.\n");
     printf("\t\t3. Jugar en un tauler aleatori.\n");
-    printf("\t\t4. Estrategies.\n");
+    printf("\t\t4. Instruccions.\n");
     printf("\t\t5. Generar fitxer aleatori.\n");
     printf("\t\t6. Tauler a imatge pbm.\n");
     printf("\t\t0. Sortir.\n");
@@ -340,6 +345,14 @@ void restaurarJoc(int m, int n, casella_t joc[][MAXROWCOL]){
     }
 }
 
+void clearBuffer(){
+    char buffer = 0;
+    while(buffer != '\n'){
+        scanf("%c", &buffer);
+    }
+}
+
+
 bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int maxErrors){
     int maxCombinations = m > n?m:n;
     maxCombinations = maxCombinations + maxCombinations % 2;
@@ -352,31 +365,34 @@ bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int max
     while(*errorsActuals < maxErrors && !jocAcabat(m, n, joc)){
         system("cls");
         printf("\n\n\tUltima posicio triada (");
-
+        char f;
         if(i == -1){
             printf(", )");
         }else printf("%d, %d)", i, j);
         printf(". Errors %d/%d. Tauler %dx%d:\n\n", *errorsActuals, maxErrors, n, m);
-        printTaulerJoc(m, n, joc, maxCombinations, cantonades);
+        printTaulerJoc(m, n, joc, maxCombinations, cantonades, 0);
 
-        int flag;
+        int sortir;
         do{
-            printf("\tSeleccionar caselles (0), posar banderes (1), sortir (2): ");
-            scanf(" %d", &flag);
-        }while(flag != 1 && flag != 0 && flag != 2);
+            printf("\tSeleccionar caselles (0), sortir (1): ");
+            scanf(" %d", &sortir);
+        }while(sortir != 1 && sortir != 0);
 
-        if(flag == 2)
+        if(sortir)
             break;
 
         do{
             printf("\tEscull una columna (x = [1, %d] o tota la taula (%d)) o (0) per sortir: ", n, n + 1);
             scanf(" %d", &i);
-        }while(i < 1 || i > n + 1);
+        }while(i < 0 || i > n + 1);
 
-        if(i == 0)
-            break;
+        do{
+            scanf("%c", &f);
+        }while(f == ' ');
+        if(f != '\n')
+            clearBuffer();
 
-        if(i != n + 1){
+        if(i != n + 1 && i != 0){
             do{
                 system("cls");
 
@@ -386,14 +402,21 @@ bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int max
                     printf(", )");
                 }else printf("%d, %d)", i, j);
                 printf(". Errors %d/%d. Tauler %dx%d:\n\n", *errorsActuals, maxErrors, n, m);
-                printTaulerJoc(m, n, joc, maxCombinations, cantonades);
+                printTaulerJoc(m, n, joc, maxCombinations, cantonades, i);
 
                 printf("\n\tEscull totes les files de la columna %d que vulguis, escriu 0 per sortir:", i);
 
                 printf("\n\t[1, %d] o tota la columna (%d): ", m, m + 1);
                 scanf(" %d", &j);
-                if(seleccio(m, n, joc, j - 1, i - 1, flag)){
-                    if(!flag && joc[j - 1][i - 1].valor == '0'){
+                do{
+                    scanf("%c", &f);
+                }while(f == ' ');
+
+                if(f != '\n')
+                    clearBuffer();
+
+                if(seleccio(m, n, joc, j - 1, i - 1, f == 'f')){
+                    if(f != 'f' && joc[j - 1][i - 1].valor == '0'){
                         (*errorsActuals)++;
                     }
                 }
@@ -402,8 +425,8 @@ bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int max
             if(j == m + 1){
                 j = 0;
                 while(*errorsActuals < maxErrors && j < m){
-                    if(!joc[j][i - 1].flag && seleccio(m, n, joc, j, i - 1, flag)){
-                        if(joc[j][i - 1].valor == '0'){
+                    if(!joc[j][i - 1].flag && seleccio(m, n, joc, j, i - 1, f == 'f')){
+                        if(f != 'f' && joc[j][i - 1].valor == '0'){
                             (*errorsActuals)++;
                         }
                     }
@@ -411,13 +434,13 @@ bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int max
                 }
             }
 
-        }else {
+        }else if (i == n + 1){
             i = 0;
             while(*errorsActuals < maxErrors && i < m){
                 j = 0;
                 while(*errorsActuals < maxErrors && j < n){
-                    if(!joc[i][j].flag && seleccio(m, n, joc, i, j, flag)){
-                        if(joc[i][j].valor == '0'){
+                    if(!joc[i][j].flag && seleccio(m, n, joc, i, j, f == 'f')){
+                        if(f != 'f' && joc[i][j].valor == '0'){
                             (*errorsActuals)++;
                         }
                     }
@@ -439,7 +462,7 @@ bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int max
         return false;
     }
 
-    printTaulerJoc(m, n, joc, maxCombinations, cantonades);
+    printTaulerJoc(m, n, joc, maxCombinations, cantonades, 0);
     *errorsActuals = 0;
     restaurarJoc(m, n, joc);
     return true;
@@ -456,12 +479,5 @@ void taulerAleatori(int m, int n, casella_t joc[][MAXROWCOL]){
             joc[i][j].revelat = false;
             joc[i][j].flag = false;
         }
-    }
-}
-
-void clearBuffer(){
-    char buffer = 0;
-    while(buffer != '\n'){
-        scanf("%c", &buffer);
     }
 }
