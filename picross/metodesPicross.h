@@ -8,7 +8,7 @@
 #define CADMAX 50
 
 typedef struct{
-    char valor; /**< valor de la casella {0, 1}; 0 si no hi ha un cuadrat, 1 si hi ha. */
+    char valor; /**< valor de la casella {0, 1}; 0 si NO hi ha un cuadrat, 1 si hi ha. */
     bool revelat; /**< si l'usuari ha triat aquesta casella */
     bool flag; /**< si l'usuari ha marcat aquesta casella com a buida (com les banderes del buscamines) */
 }casella_t;

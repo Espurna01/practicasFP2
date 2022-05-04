@@ -65,6 +65,8 @@ int main()
                     printf("%s\n", pathFinal);
                 }
                 partidaAleatoria = false;
+                errorsActuals = 0;
+                partidaGuardada = false;
             } else {
                 printf("\tNo s'ha pogut afegir l'extensio del fitxer (\".txt\") o el path correctament, el nom es mass llarg (max:%d).\n", CADMAX - 9);
             }
@@ -163,14 +165,6 @@ int main()
                 printf("\t\t\t|    3    |    3 + 1 - 1 >= 3\t|  si\t|\n");
                 printf("\t\t\t|    4    |    4 + 1 - 1 >= 3\t|  si\t|\n");
                 printf("\t\t\t|    5    |    5 + 1 - 1 >= 3\t|  si*\t|\n");
-
-
-
-
-
-
-
-
             }
             break;
         case 5:
@@ -228,16 +222,5 @@ int main()
         primeraTriada = true;
     }while(opcio != 0);
 
-    printf("He salido opcio %d", opcio);
-//
-//    printf("%d %d %d\n", m, n, maxErrors);
-//
-//    printTaulerJoc(m, n, joc, maxCombinations, cantonades);
-//    boardToPBM("fitProva.pbm", m, n, joc);
-//
-//    printf("Joc acabat %d\n", jocAcabat(m, n, joc));
-//
-//    //IA(m, n  , maxErrors, joc, maxCombinations, cantonades);
-//    generarFitxerAleatori("fitProva.txt", rand() % MAXROWCOL + 1, rand() % MAXROWCOL + 1, 10, 75);
     return 0;
 }

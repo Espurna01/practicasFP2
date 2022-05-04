@@ -136,8 +136,8 @@ bool boardToPBM(char *filename, int m, int n, casella_t joc[][MAXROWCOL]){
 }
 
 void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombinations, char cantonades[][maxCombinations]){
-    int maxBlocsM = 0;
-    int maxDigitsM = 0;
+    int maxBlocsM = 0;  /**< La cantonada que mes valors te (files) */
+    int maxDigitsM = 0; /**<  */
     int maxBlocsN = 0;
     int maxDigitsN = 0;
     for(int i = 0; i < m + n; i++){
@@ -294,12 +294,11 @@ void printMenu(){
 }
 
 bool afegirExtensio(char* fitxer, char *extensio){
-
     int saltLinea = 0;
+
     while(fitxer[saltLinea] != '\n' && saltLinea < CADMAX){
         saltLinea++;
     }
-
     if(saltLinea + 5 >= CADMAX){ /**< {'.', 't', 'x', 't', '\0'}/{'.', 'p', 'b', 'm', '\0'} */
         return false;
     }
@@ -308,7 +307,6 @@ bool afegirExtensio(char* fitxer, char *extensio){
         fitxer[i + saltLinea] = extensio[i];
     }
     fitxer[i + saltLinea] = '\0';
-
     return true;
 }
 
@@ -353,7 +351,7 @@ bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int max
         system("cls");
         printf("\n\n\tUltima posicio triada (");
 
-        if(i == -1){
+        if(i == -1 || j == -1){
             printf(", )");
         }else printf("%d, %d)", i, j);
         printf(". Errors %d/%d. Tauler %dx%d:\n\n", *errorsActuals, maxErrors, n, m);
@@ -371,12 +369,9 @@ bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int max
         do{
             printf("\tEscull una columna (x = [1, %d] o tota la taula (%d)) o (0) per sortir: ", n, n + 1);
             scanf(" %d", &i);
-        }while(i < 1 || i > n + 1);
+        }while((i < 1 || i > n + 1) && i != 0);
 
-        if(i == 0)
-            break;
-
-        if(i != n + 1){
+        if(i != n + 1 && i != 0){
             do{
                 system("cls");
 
@@ -411,7 +406,7 @@ bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int max
                 }
             }
 
-        }else {
+        } else if(i != 0) {
             i = 0;
             while(*errorsActuals < maxErrors && i < m){
                 j = 0;
@@ -443,7 +438,6 @@ bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int max
     *errorsActuals = 0;
     restaurarJoc(m, n, joc);
     return true;
-
 }
 
 void taulerAleatori(int m, int n, casella_t joc[][MAXROWCOL]){
