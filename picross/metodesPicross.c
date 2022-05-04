@@ -137,9 +137,13 @@ bool boardToPBM(char *filename, int m, int n, casella_t joc[][MAXROWCOL]){
 
 void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombinations, char cantonades[][maxCombinations], int marca){
     int maxBlocsM = 0;
-    int maxDigitsM = 0;
-    int maxBlocsN = 0;
-    int maxDigitsN = 0;
+    int maxDigitsM = 0;     /**< El nombre maxim total de digits d'una cantonada (digitsM(3 1) = 2) de les files */
+    int maxBlocsN = 0;      /**< El nombre maxim de blocs en una columna */
+    int maxDigitsN = 0;     /**< El nombre maxim de digits d'un nombre entre totes les cantonades de les columnes */
+                            /**< Nomes es relevant si hi ha un bloc de +9 caselles consecutives */
+    /**< Recorro els valors de les cantonades fent les comprovacions necesaries, */
+    /**< les primeres posicions m posicions [0, m-1] corresponen a les cantonades de les files */
+    /**< les següents n posicions corresponen a les columnes [m-1, m - 1 + n] */
     for(int i = 0; i < m + n; i++){
         int digits = 0;
         int blocs = 0;
@@ -166,38 +170,68 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
                 maxBlocsN = blocs;
         }
     }
-
+    /**< Amb les dades obtingudes se com d'ample sera el tauler */
+    /**< en un tauler de 5x5 per exemple on maxDigitsM sigui 3 i maxDigitsN sigui 1 */
+    /**< l'amplada sera 6 (per escriure els valors de les cantonades horitzontals) + 10 (per escriure els valors verticals) = 16 */
     printf("\t\t%c", 201);
     for(int i = 0; i < maxDigitsM * 2 + (maxDigitsN - 1) * n + n * 2;i++)
         printf("%c", 205);
     printf("%c\n", 187);
-
+    /**< Aquest primer bucle escriu les cantonades verticals de la taula */
+    /**
+                ╔══════════════╗
+                ║    | | | |1| ║
+                ║    |2| | |1| ║
+                ║    |2|4|1|1|2║y
+    */
     for(int i = 0; i < maxBlocsN; i++){
         printf("\t\t%c", 186);
         for(int j = 0; j < maxDigitsM * 2; j++){
             printf(" ");
         }
+        /**< i: index actual de la cantonada que s'esta llegint */
+        /**<    ╔══════════════╗
+            i=0 ║    | | | |1| ║
+            i=1 ║    |2| | |1| ║
+            i=2 ║    |2|4|1|1|2║y
+        */
         for(int j = 0; j < n; j++){
             printf("|");
 
+            /**< Blocs de la cantonada que s'esta llegint actualment */
+            /**
+                j:    0 1 2 3 4
+                ╔══════════════╗
+                ║    | | | |1| ║
+                ║    |2| | |1| ║
+                ║    |2|4|1|1|2║y
+            */
             int blocs;
             for(blocs = 0; cantonades[j + m][blocs] != CENTINELLA; blocs++);
-
+            /**< Vull que les cantonades s'escriguin pegades al tauler */
+            /**< Si l'index + el nombre de blocs de la cantonada actual es < */
+            /**< que el nombre maxim de blocs del tauler escriure un espai */
             if(i + blocs < maxBlocsN){
                 for(int k = 0; k < maxDigitsN; k++){
                     printf(" ");
                 }
             }else{
+                /**< i - maxBlocsM + blocs correspon a l'index que he d'escriure */
+                /**< (2 2) -> 2 - 3 + 2 = 1 */
                 printf("%d", cantonades[j + m][i - maxBlocsN + blocs]);
-                int digits = 0;
-                char cantonada = cantonades[j + m][i - maxBlocsN + blocs];
-                while(cantonada != 0){
-                    digits++;
-                    cantonada /= 10;
+                /**< He de comprovar que la cantonada escrita tingui els digits corresponents */
+                if(maxDigitsN != 1){
+                    int digits = 0;
+                    char cantonada = cantonades[j + m][i - maxBlocsN + blocs];
+                    while(cantonada != 0){
+                        digits++;
+                        cantonada /= 10;
+                    }
+                    for(int k = 0;digits + k < maxDigitsN;k++){
+                        printf(" ");
+                    }
                 }
-                for(int k = 0;digits + k < maxDigitsN;k++){
-                    printf(" ");
-                }
+
             }
         }
         printf("%c", 186);
@@ -206,46 +240,66 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
         printf("\n");
     }
 
-
+    /**< Aquest segon bucle escriura les cantonades horitzontals i la taula */
+    /**
+                ║──────────────║
+                ║ 1 2| | | | | ║1
+                ║──────────────║
+                ║ 2 1| | | | | ║2
+                ║──────────────║
+                ║   3| | | | | ║3
+                ║──────────────║
+                ║   2| | | | | ║4
+                ║──────────────║
+                ║ 2 1| | | | | ║5
+                ╚══════════════╝
+                    x ->
+    */
     for(int i = 0; i < m; i++){
+        /**< La linea de separacio entre cada fila */
         printf("\t\t%c", 186);
         for(int j = 0;j < maxDigitsM * 2 + (maxDigitsN - 1) * n + n * 2; j++){
             printf("%c", 196);
         }
         printf("%c\n", 186);
         printf("\t\t%c", 186);
-        int digits = 0;
-        for(int j = 0; cantonades[i][j] != CENTINELLA; j++){
-            char cantonada = cantonades[i][j];
-            while(cantonada != 0){
-                digits++;
-                cantonada /= 10;
+
+        int blocs;
+        for(blocs = 0; cantonades[i][blocs] != CENTINELLA; blocs++);
+
+        if(blocs != 0){
+            for(int j = 0; j + blocs < maxBlocsM; j++)
+                printf("  ");
+
+            int digits = 0;
+
+            for(int j = 0; cantonades[i][j] != CENTINELLA; j++){
+                char cantonada = cantonades[i][j];
+                while(cantonada != 0){
+                    digits++;
+                    cantonada /= 10;
+                }
             }
-        }
 
-        if(digits == 0)
-            digits = 1;
-
-        for(int k = 0; (digits * 2) + k < maxDigitsM * 2 + 1;k++)
-            printf(" ");
-
-        for(int j = 0; cantonades[i][j] != CENTINELLA; j++){
-            char a = cantonades[i][j] / 10;
-            while(a != 0){
+            for(int j = 0;digits + j < maxDigitsN;j++)
                 printf(" ");
-                a /= 10;
+
+            printf(" ");
+        }else{
+            for(int j = 0; j < maxDigitsM * 2; j++){
+                printf(" ");
             }
         }
 
-        if(cantonades[i][0] == CENTINELLA)
-            printf(" ");
 
+
+        /**< Escriu les cantonades horitzontals del tauler */
         for(int j = 0; cantonades[i][j] != CENTINELLA; j++){
             if(j == 0)
                 printf("%d", cantonades[i][j]);
             else printf(" %d", cantonades[i][j]);
         }
-
+        /**< Escriu tota una fila del tauler cada cop */
         for(int j = 0; j < n; j++){
             printf("|");
             if(joc[i][j].revelat)
@@ -255,6 +309,7 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
                 printf(" ");
             }
         }
+        /**< Numeros de cada fila per ajudar a l'usuari a visualitzar una posicio en el tauler */
         printf("%c%d\n", 186, i + 1);
 
     }
@@ -267,11 +322,11 @@ void printTaulerJoc(int m, int n, casella_t joc[][MAXROWCOL], int maxCombination
     for(int j = 0; j < maxDigitsM * 2; j++){
         printf(" ");
     }
-
+    /**< Si marca != 0 (true) escriura una flecha a la columna indicada. */
     if(marca){
         for(int i = 0; i < marca; i++)
             printf("  ");
-        printf("%c", 24);
+        printf("%c", 30);
     }else printf("x ->");
 
     printf("\n\n");

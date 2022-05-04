@@ -41,7 +41,6 @@ int main()
                 if(!partidaAleatoria){
                     printf(" \"%s\"", fitxercarregat);
                 }
-
             }else{
                 if(carregatCorrectament){
                     printf("Tens un tauler carregat (\"%s\") de %dx%d amb un maxim de errors de %d, pots jugar-lo amb op.2 o generar un aleatori op.3.", fitxercarregat, n, m, maxErrors);
@@ -66,6 +65,7 @@ int main()
                     printf("\tNo s'ha pogut carregar correctament el fitxer, potser l'has escrit malament, no existeix al path %s o no te les dades correctes.\n", taulersPath);
                 }
                 partidaAleatoria = false;
+                partidaGuardada = false;
             } else {
                 printf("\tNo s'ha pogut afegir l'extensio del fitxer (\".txt\") o el path correctament, el nom es mass llarg (max:%d).\n", CADMAX - 9);
             }
@@ -202,15 +202,5 @@ int main()
         primeraTriada = true;
     }while(opcio != 0);
 
-//
-//    printf("%d %d %d\n", m, n, maxErrors);
-//
-//    printTaulerJoc(m, n, joc, maxCombinations, cantonades);
-//    boardToPBM("fitProva.pbm", m, n, joc);
-//
-//    printf("Joc acabat %d\n", jocAcabat(m, n, joc));
-//
-//    //IA(m, n  , maxErrors, joc, maxCombinations, cantonades);
-//    generarFitxerAleatori("fitProva.txt", rand() % MAXROWCOL + 1, rand() % MAXROWCOL + 1, 10, 75);
     return 0;
 }

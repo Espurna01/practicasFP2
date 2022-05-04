@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1651508093 source:c:\urv\fpii\practicasfp2\picross\main.c
+1651558806 source:c:\urv\fpii\practicasfp2\picross\main.c
 	"metodesPicross.h"
 	<time.h>
 
@@ -8,7 +8,7 @@
 	<stdio.h>
 	<stdbool.h>
 
-1651509107 source:c:\urv\fpii\practicasfp2\picross\metodespicross.c
+1651563833 source:c:\urv\fpii\practicasfp2\picross\metodespicross.c
 	<stdlib.h>
 	<stdio.h>
 	<stdbool.h>
