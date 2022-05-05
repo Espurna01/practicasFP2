@@ -477,7 +477,7 @@ bool jugar(int m, int n, casella_t joc[][MAXROWCOL], int *errorsActuals, int max
                         (*errorsActuals)++;
                     }
                 }
-            }while(j != 0 && *errorsActuals < maxErrors && j != m + 1);
+            }while(j != 0 && *errorsActuals < maxErrors && j != m + 1 && !jocAcabat(m, n, joc));
 
             if(j == m + 1){
                 j = 0;
