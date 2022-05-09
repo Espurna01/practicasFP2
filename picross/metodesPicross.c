@@ -22,16 +22,21 @@ bool carregarDades(char* filename, int *m, int *n, int *e, casella_t joc[][MAXRO
     buffer = 'a';
     while(buffer != '\n')
         fscanf(fit, "%c", &buffer);
-    for(int i = 0; i < *m; i++){
-        for(int j = 0; j < *n; j++){
-            fscanf(fit, "%c", &(joc[i][j].valor));
+    int count = 0;
+    for(int i = 0; i < *m && !feof(fit); i++){
+        for(int j = 0; j < *n && !feof(fit); j++){
+            fscanf(fit, "%c", &buffer);
+            if(buffer == '1')
+                joc[i][j].valor = buffer;
+            else joc[i][j].valor = '0';
             joc[i][j].revelat = false;
             joc[i][j].flag = false;
+            count++;
         }
         fscanf(fit, "%c", &buffer);
     }
     fclose(fit);
-    return true;
+    return count == *m * *n;
 }
 
 void calcularCantonades(int m, int n, casella_t joc[][MAXROWCOL], int maxCombinations, char cantonades[][maxCombinations]){
