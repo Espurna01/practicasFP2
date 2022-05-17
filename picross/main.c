@@ -7,7 +7,7 @@ int main()
 {
     srand(time(NULL));
     int m, n, maxErrors, opcio;
-    int errorsActuals = 0;
+    int errorsActuals = 0, pixelsRestants = 0;
     bool carregatCorrectament = false, partidaAleatoria = false, partidaGuardada = false, primeraTriada = false;
     char fitxercarregat[CADMAX], fitxercreat[CADMAX];
     char taulersPath[] = "taulers\\";
@@ -60,7 +60,7 @@ int main()
             printf("\n\t\tHas triat la opcio 1 - Carregar tauler.\n\n\tQuin es el nom del fitxer? (sense la extensio .txt)\n\t");
             fgets(fitxercarregat, CADMAX, stdin);
             if(afegirExtensio(fitxercarregat, ".txt") && combinarPath(fitxercarregat, taulersPath, pathFinal)){
-                carregatCorrectament = carregarDades(pathFinal, &m, &n, &maxErrors, joc);
+                carregatCorrectament = carregarDades(pathFinal, &m, &n, &maxErrors, joc, &pixelsRestants);
                 if(!carregatCorrectament){
                     printf("\tNo s'ha pogut carregar correctament el fitxer, potser l'has escrit malament, no existeix al path %s o no te les dades correctes.\n", taulersPath);
                 }
@@ -81,10 +81,10 @@ int main()
                     }while(opcio != 1 && opcio != 0);
 
                     if(!opcio){
-                        restaurarJoc(m, n, joc);
+                        restaurarJoc(m, n, joc, &pixelsRestants);
                     }
                 }
-                partidaGuardada = !jugar(m, n, joc, &errorsActuals, maxErrors);
+                partidaGuardada = !jugar(m, n, joc, &errorsActuals, maxErrors, &pixelsRestants);
                 partidaAleatoria = false;
             }else {
                 if(partidaAleatoria){
@@ -114,12 +114,12 @@ int main()
                 m = (rand() % 3 + 1) * 5;   /**< {5, 10, 15} */
                 n = (rand() % 3 + 1) * 5;   /**< {5, 10, 15} */
                 maxErrors = (m * n)/(m + n);
-                taulerAleatori(m, n, joc);
-                partidaGuardada = !jugar(m, n, joc, &errorsActuals, maxErrors);
+                taulerAleatori(m, n, joc, &pixelsRestants);
+                partidaGuardada = !jugar(m, n, joc, &errorsActuals, maxErrors, &pixelsRestants);
                 partidaAleatoria = true;
                 carregatCorrectament = false;
             } else if(partidaAleatoria){
-                partidaGuardada = !jugar(m, n, joc, &errorsActuals, maxErrors);
+                partidaGuardada = !jugar(m, n, joc, &errorsActuals, maxErrors, &pixelsRestants);
                 partidaAleatoria = true;
                 carregatCorrectament = false;
             }
