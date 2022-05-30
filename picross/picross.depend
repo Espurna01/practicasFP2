@@ -3,12 +3,9 @@
 	"metodesPicross.h"
 	<time.h>
 
-1648851661 source:c:\urv\fp2\practicas\picross\main.c
-	<stdio.h>
-	<stdlib.h>
-	<stdbool.h>
+1653904785 source:c:\urv\fp2\practicas\picross\main.c
+	"metodesPicross.h"
 	<time.h>
-	<sys/time.h>
 
 1648815616 source:c:\urv\fp2\practicas\picross\s.c
 
@@ -24,20 +21,16 @@
 	<stdio.h>
 	<stdbool.h>
 
-1650351854 source:c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practices fpii\practiques fpii\practicasfp2\picross\main.c
+1651558560 source:c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practices fpii\practiques fpii\practicasfp2\picross\main.c
 	"metodesPicross.h"
 	<time.h>
-
-1650744693 c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practices fpii\practiques fpii\practicasfp2\picross\metodespicross.h
-	<stdlib.h>
-	<stdio.h>
-	<stdbool.h>
-
-1651558560 source:c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practices fpii\practiques fpii\practicasfp2\picross\main.c
 	"metodesPicross.h"
 	<time.h>
 
 1651558560 c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practices fpii\practiques fpii\practicasfp2\picross\metodespicross.h
+	<stdlib.h>
+	<stdio.h>
+	<stdbool.h>
 	<stdlib.h>
 	<stdio.h>
 	<stdbool.h>
@@ -47,21 +40,9 @@
 	<stdio.h>
 	<stdbool.h>
 
-1652767979 source:c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practiques fpii\practiques fpii\practicasfp2\picross\main.c
+1652772209 source:c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practiques fpii\practiques fpii\practicasfp2\picross\main.c
 	"metodesPicross.h"
 	<time.h>
-
-1652767979 c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practiques fpii\practiques fpii\practicasfp2\picross\metodespicross.h
-	<stdlib.h>
-	<stdio.h>
-	<stdbool.h>
-
-1652767979 source:c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practiques fpii\practiques fpii\practicasfp2\picross\metodespicross.c
-	<stdlib.h>
-	<stdio.h>
-	<stdbool.h>
-
-1652772209 source:c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practiques fpii\practiques fpii\practicasfp2\picross\main.c
 	"metodesPicross.h"
 	<time.h>
 
@@ -69,8 +50,19 @@
 	<stdlib.h>
 	<stdio.h>
 	<stdbool.h>
+	<stdlib.h>
+	<stdio.h>
+	<stdbool.h>
 
 1652772209 source:c:\users\usuari\desktop\1r curs uni 21-22\2a part\fp ii\practiques fpii\practiques fpii\practicasfp2\picross\metodespicross.c
+	<stdlib.h>
+	<stdio.h>
+	<stdbool.h>
+	<stdlib.h>
+	<stdio.h>
+	<stdbool.h>
+
+1653904785 c:\urv\fp2\practicas\picross\metodespicross.h
 	<stdlib.h>
 	<stdio.h>
 	<stdbool.h>
